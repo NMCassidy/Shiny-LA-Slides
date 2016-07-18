@@ -19,7 +19,7 @@ colnames(emAdDta)[1] <- "Area"
 emAdDta_cln <- emAdDta[emAdDta$Area %in% rowsKeep,]
 emAdDta_mlt <- melt(emAdDta, id.vars = 1:2)
 
-
+##SPARQL for geographic information
 endpoint <- "http://statistics.gov.scot/sparql"
 queryDZ <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
