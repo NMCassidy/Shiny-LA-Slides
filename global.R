@@ -1,6 +1,13 @@
 library(pacman)
 p_load(shiny, dplyr, readr, ggplot2, reshape2, plotly, SPARQL)
 
+HiLoTen <- function(x, number = 10){
+  top_ten<-head(x, n = number)
+  bot_ten<-tail(x, n = number)
+  top_bot_df<-rbind(top_ten, bot_ten)
+  return(top_bot_df)
+}
+
 emAdDta <- read_csv("http://statistics.gov.scot/slice/observations.csv?&dataset=http%3A%2F%2Fstatistics.gov.scot%2Fdata%2Fhospital-admissions&http%3A%2F%2Fpurl.org%2Flinked-data%2Fcube%23measureType=http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fmeasure-properties%2Fratio&http%3A%2F%2Fpurl.org%2Flinked-data%2Fsdmx%2F2009%2Fdimension%23refPeriod=http%3A%2F%2Freference.data.gov.uk%2Fid%2Fyear%2F2012&http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fdimension%2FadmissionType=http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fconcept%2Fadmission-type%2Femergency&http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fdimension%2Fgender=http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fconcept%2Fgender%2Fall", skip = 9)
 
 emAdDta[emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea` == "http://statistics.gov.scot/id/statistical-geography/S92000003",1] <- "Scotland"

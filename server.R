@@ -15,9 +15,17 @@ shinyServer(function(input, output){
   })
   
   data2 <- reactive({
+    if(input$graphType == "All"){
     dt <- data()
     dt <- filter(dt, variable == input$Ind)
+    }else{
+      dt <- data()
+      dt <- filter(dt, variable == input$Ind)
+      dt <- dt[order(dt$value),]
+      dt <- HiLoTen(dt)
+    }
   })
+  
   scotVal <- reactive({
     dt <- filter(emAdDta_mlt, variable == input$Ind)
     SVal <- dt[dt$Area =="Scotland", 4]
