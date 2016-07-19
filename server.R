@@ -37,6 +37,7 @@ shinyServer(function(input, output){
       geom_bar(aes(x = reorder(`Reference Area`, value), y = value),stat = "identity")+
       geom_hline(yintercept = scotVal())+
       xlab("Area")+
+      ylab("")+
       geom_text(aes(x =length(`Reference Area`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
