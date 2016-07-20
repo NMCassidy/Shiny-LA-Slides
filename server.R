@@ -18,7 +18,7 @@ shinyServer(function(input, output){
     if(input$graphType == "All"){
     dt <- data()
     dt <- filter(dt, variable == input$Ind)
-    }else{
+    }else if(input$Area != "Council"){
       dt <- data()
       dt <- filter(dt, variable == input$Ind)
       dt <- dt[order(dt$value),]
@@ -33,15 +33,30 @@ shinyServer(function(input, output){
   
   output$barplot <- renderPlotly({
     dta <- data2()
-    p <- ggplot(data = dta) +
+    if(input$Area != "Council"){
+      p <- ggplot(data = dta) +
       geom_bar(aes(x = reorder(`Reference Area`, value), y = value),stat = "identity")+
       geom_hline(yintercept = scotVal())+
-      xlab("Area")+
+      xlab("")+
       ylab("")+
       geom_text(aes(x =length(`Reference Area`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-    
+    } else{
+      rarara <- dta[order(dta$value), ]
+      nmbr <- match(input$Cncl, rarara$`Reference Area`) 
+      clrs <- c(rep("black", nmbr-1), "red", rep("black", (32 - nmbr)))
+      p <- ggplot(data = dta) +
+        geom_bar(aes(x = reorder(`Reference Area`, value), y = value),stat = "identity", fill = clrs)+
+        geom_hline(yintercept = scotVal())+
+        xlab("Council")+
+        ylab("")+
+        geom_text(aes(x =length(`Reference Area`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
+        theme_bw()+
+        scale_fill_manual(values = clrs)+
+        guides(fill = FALSE)+
+        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+    }
     pp <- ggplotly(p)
     pp
   })
