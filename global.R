@@ -22,7 +22,7 @@ WHERE {
   ?s <http://statistics.gov.scot/def/dimension/gender> <http://statistics.gov.scot/def/concept/gender/all>.
   ?s <http://statistics.gov.scot/def/dimension/admissionType> <http://statistics.gov.scot/def/concept/admission-type/emergency>.
   ?s <http://purl.org/linked-data/sdmx/2009/dimension#refArea> ?a.
-  ?a rdfs:label ?Area.
+  ?a rdfs:label ?ReferenceArea.
   ?a skos:notation ?code.
   ?s <http://statistics.gov.scot/def/measure-properties/ratio> ?value.
   ?s <http://statistics.gov.scot/def/dimension/age> ?ind.
