@@ -1,13 +1,13 @@
 shinyServer(function(input, output){
   
   data <- reactive({
-    clnDta <- filter(emAdDta_mlt, Area == input$Area)
+    clnDta <- filter(emAdDta, Area == input$Area)
     
     if(input$Area == "Data Zone"){
-      clnDta <- left_join(emAdDta_mlt, lablsDZ, by = c("Reference Area" = "DataZ")) %>%
+      clnDta <- left_join(emAdDta, lablsDZ, by = c("ReferenceArea" = "DataZ")) %>%
         filter(., Council == input$Cncl)
     }else if(input$Area == "Intermediate Geography"){
-      clnDta <- left_join(emAdDta_mlt, lablsIG, by = c("Reference Area" = "IntZ")) %>%
+      clnDta <- left_join(emAdDta, lablsIG, by = c("code" = "code")) %>%
         filter(., Council == input$Cncl)
     }else{
       clnDta <- clnDta
@@ -27,7 +27,7 @@ shinyServer(function(input, output){
   })
   
   scotVal <- reactive({
-    dt <- filter(emAdDta_mlt, variable == input$Ind)
+    dt <- filter(emAdDta, variable == input$Ind)
     SVal <- dt[dt$Area =="Scotland", 4]
   })
   
@@ -35,23 +35,23 @@ shinyServer(function(input, output){
     dta <- data2()
     if(input$Area != "Council"){
       p <- ggplot(data = dta) +
-      geom_bar(aes(x = reorder(`Reference Area`, value), y = value),stat = "identity")+
+      geom_bar(aes(x = reorder(`ReferenceArea`, value), y = value),stat = "identity")+
       geom_hline(yintercept = scotVal())+
       xlab("")+
       ylab("")+
-      geom_text(aes(x =length(`Reference Area`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
+      geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
     } else{
       rarara <- dta[order(dta$value), ]
-      nmbr <- match(input$Cncl, rarara$`Reference Area`) 
+      nmbr <- match(input$Cncl, rarara$`ReferenceArea`) 
       clrs <- c(rep("black", nmbr-1), "red", rep("black", (32 - nmbr)))
       p <- ggplot(data = dta) +
-        geom_bar(aes(x = reorder(`Reference Area`, value), y = value),stat = "identity", fill = clrs)+
+        geom_bar(aes(x = reorder(`ReferenceArea`, value), y = value),stat = "identity", fill = clrs)+
         geom_hline(yintercept = scotVal())+
         xlab("Council")+
         ylab("")+
-        geom_text(aes(x =length(`Reference Area`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
+        geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), nudge_y = (scotVal()/11))+
         theme_bw()+
         scale_fill_manual(values = clrs)+
         guides(fill = FALSE)+

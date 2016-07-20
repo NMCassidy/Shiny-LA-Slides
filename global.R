@@ -1,5 +1,5 @@
 library(pacman)
-p_load(shiny, dplyr, readr, ggplot2, reshape2, plotly, SPARQL)
+p_load(shiny, dplyr, readr, ggplot2, reshape2, plotly, SPARQL, stringr)
 
 HiLoTen <- function(x, number = 10){
   top_ten<-head(x, n = number)
@@ -7,27 +7,48 @@ HiLoTen <- function(x, number = 10){
   top_bot_df<-rbind(top_ten, bot_ten)
   return(top_bot_df)
 }
-
-emAdDta <- read_csv("http://statistics.gov.scot/slice/observations.csv?&dataset=http%3A%2F%2Fstatistics.gov.scot%2Fdata%2Fhospital-admissions&http%3A%2F%2Fpurl.org%2Flinked-data%2Fcube%23measureType=http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fmeasure-properties%2Fratio&http%3A%2F%2Fpurl.org%2Flinked-data%2Fsdmx%2F2009%2Fdimension%23refPeriod=http%3A%2F%2Freference.data.gov.uk%2Fid%2Fyear%2F2012&http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fdimension%2FadmissionType=http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fconcept%2Fadmission-type%2Femergency&http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fdimension%2Fgender=http%3A%2F%2Fstatistics.gov.scot%2Fdef%2Fconcept%2Fgender%2Fall", skip = 9)
-
-emAdDta[emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea` == "http://statistics.gov.scot/id/statistical-geography/S92000003",1] <- "Scotland"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S16", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Constituency"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S13", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Electoral Wards"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S12", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Council"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S08", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Health Board"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S06", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Regeneration Outcome Areas"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S05", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Regeneration Outcome Areas - CPP"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S03", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "CHPs"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S02", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Intermediate Geography"
-emAdDta[grep("http://statistics.gov.scot/id/statistical-geography/S01", emAdDta$`http://purl.org/linked-data/sdmx/2009/dimension#refArea`),1] <- "Data Zone"
-
-rowsKeep <- c("Scotland", "Council", "Intermediate Geography","Data Zone")
-colnames(emAdDta)[1] <- "Area"
-emAdDta_cln <- emAdDta[emAdDta$Area %in% rowsKeep,]
-emAdDta_mlt <- melt(emAdDta, id.vars = 1:2)
-
-##SPARQL for geographic information
+#Sparql for data 
 endpoint <- "http://statistics.gov.scot/sparql"
+
+emAdQry <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT ?ReferenceArea ?code ?value ?variable
+WHERE {
+  ?s qb:dataSet <http://statistics.gov.scot/data/hospital-admissions>.
+  ?s <http://purl.org/linked-data/cube#measureType> <http://statistics.gov.scot/def/measure-properties/ratio>.
+  ?s <http://purl.org/linked-data/sdmx/2009/dimension#refPeriod> <http://reference.data.gov.uk/id/year/2012>.
+  ?s <http://statistics.gov.scot/def/dimension/gender> <http://statistics.gov.scot/def/concept/gender/all>.
+  ?s <http://statistics.gov.scot/def/dimension/admissionType> <http://statistics.gov.scot/def/concept/admission-type/emergency>.
+  ?s <http://purl.org/linked-data/sdmx/2009/dimension#refArea> ?a.
+  ?a rdfs:label ?Area.
+  ?a skos:notation ?code.
+  ?s <http://statistics.gov.scot/def/measure-properties/ratio> ?value.
+  ?s <http://statistics.gov.scot/def/dimension/age> ?ind.
+  ?ind rdfs:label ?variable.
+}"
+emAdDta <- SPARQL(endpoint, emAdQry)$results
+#Tidy up code variable
+for(i in 1:nrow(emAdDta)){
+emAdDta$code[i] <- str_sub(emAdDta$code[i], start = 2, end = 10)
+}
+emAdDta[[5]] <- 1:nrow(emAdDta)
+#New variable with the geography type
+emAdDta[emAdDta$code == "S92000003",5] <- "Scotland"
+emAdDta[grep("S16", emAdDta$code),5] <- "Constituency"
+emAdDta[grep("S13", emAdDta$code),5] <- "Electoral Wards"
+emAdDta[grep("S12", emAdDta$code),5] <- "Council"
+emAdDta[grep("S08", emAdDta$code),5] <- "Health Board"
+emAdDta[grep("S06", emAdDta$code),5] <- "Regeneration Outcome Areas"
+emAdDta[grep("S05", emAdDta$code),5] <- "Regeneration Outcome Areas - CPP"
+emAdDta[grep("S03", emAdDta$code),5] <- "CHPs"
+emAdDta[grep("S02", emAdDta$code),5] <- "Intermediate Geography"
+emAdDta[grep("S01", emAdDta$code),5] <- "Data Zone"
+colnames(emAdDta)[5] <- "Area"
+rowsKeep <- c("Scotland", "Council", "Intermediate Geography","Data Zone")
+emAdDta <- emAdDta[emAdDta$Area %in% rowsKeep,]
+##SPARQL for geographic information
 queryDZ <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?Council ?DataZ
@@ -43,16 +64,20 @@ lablsDZ <- SPARQL(endpoint, queryDZ)$results
 
 queryIG <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?Council ?IntZ
+SELECT ?Council ?IntZ ?code
 WHERE {
 ?s <http://statistics.data.gov.uk/def/statistical-entity#code> <http://statistics.gov.scot/id/statistical-entity/S02>.
 ?s <http://statistics.data.gov.uk/def/statistical-geography#parentcode> ?cn.
+?s <http://statistics.data.gov.uk/def/statistical-geography#status> 'Archive'.
 ?cn rdfs:label ?Council.
 ?s rdfs:label ?IntZ.   
+?s <http://www.w3.org/2004/02/skos/core#notation> ?code
 }"
 lablsIG <- SPARQL(endpoint, queryIG)$results
-
-emAdDta_mlt$variable <- as.character(emAdDta_mlt$variable)
+for(i in 1:nrow(lablsIG)){
+  lablsIG$code[i] <- str_sub(lablsIG$code[i], start = 2, end = 10)
+}
+emAdDta$variable <- as.character(emAdDta$variable)
 
 queryDestinations <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
