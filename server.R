@@ -41,14 +41,16 @@ shinyServer(function(input, output){
       p <- ggplot(data = dta) +
       geom_bar(aes(x = reorder(ReferenceArea, value), y = value, text = paste("Area:", `ReferenceArea`)), fill = "black",stat = "identity")+
       geom_hline(yintercept = scotVal(), colour = "red")+
-      geom_hline(yintercept = cnclVal(), colour = "green")+
+      geom_hline(yintercept = cnclVal(), colour = "green4")+
       xlab("")+
       ylab("")+
       scale_x_discrete(label = abbreviate)+
       geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
-      geom_text(aes(x =length(`ReferenceArea`)/3, y = cnclVal(), label = paste("Council", as.character(cnclVal()))),colour = "green", nudge_y = -(cnclVal()/11))+
+      geom_text(aes(x =length(`ReferenceArea`)/4.5, y = cnclVal(), label = paste("Council", as.character(cnclVal()))),colour = "green4", nudge_y = -(cnclVal()/10))+
       theme_bw()+
-      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank())
     } else{
       rarara <- dta[order(dta$value), ]
       nmbr <- match(input$Cncl, rarara$ReferenceArea) 
@@ -62,9 +64,11 @@ shinyServer(function(input, output){
         theme_bw()+
         scale_fill_manual(values = clrs)+
         guides(fill = FALSE)+
-        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank())
     }
-    pp <- ggplotly(p)
+    pp <- ggplotly(p, tooltip = c("text", "y"))
     pp
   })
   
