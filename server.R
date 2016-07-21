@@ -35,11 +35,11 @@ shinyServer(function(input, output){
     dta <- data2()
     if(input$Area != "Council"){
       p <- ggplot(data = dta) +
-      geom_bar(aes(x = reorder(ReferenceArea, value), y = value),stat = "identity")+
+      geom_bar(aes(x = reorder(ReferenceArea, value), y = value), colour = "black",stat = "identity")+
       geom_hline(yintercept = scotVal(), colour = "red")+
       xlab("")+
       ylab("")+
-      geom_text(aes(x =length(ReferenceArea)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
+      geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
     } else{
@@ -47,7 +47,7 @@ shinyServer(function(input, output){
       nmbr <- match(input$Cncl, rarara$ReferenceArea) 
       clrs <- c(rep("black", nmbr-1), "blue", rep("black", (32 - nmbr)))
       p <- ggplot(data = dta) +
-        geom_bar(aes(x = reorder(`ReferenceArea`, value), y = value),stat = "identity", fill = clrs)+
+        geom_bar(aes(x = reorder(`ReferenceArea`, value), y = value, text = paste("Council:", `ReferenceArea`)),stat = "identity", fill = clrs)+
         geom_hline(yintercept = scotVal(), colour = "red")+
         xlab("Council")+
         ylab("")+
