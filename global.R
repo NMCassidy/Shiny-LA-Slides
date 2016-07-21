@@ -8,6 +8,7 @@ HiLoTen <- function(x, number = 10){
   return(top_bot_df)
 }
 ##SPARQL for geographic information
+endpoint <- "http://statistics.gov.scot/sparql"
 queryDZ <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?Council ?DataZ
@@ -38,4 +39,4 @@ for(i in 1:nrow(lablsIG)){
 }
 
 #read data from csv
-emAdDta <- read_csv("C:/Users/nickm/Google Drive/IS Work/Shiny LA Slides/dataset.csv")
+emAdDta <- read.csv("C:/Users/nickm/Google Drive/IS Work/Shiny LA Slides/dataset.csv", stringsAsFactors = FALSE)[2:6]

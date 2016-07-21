@@ -3,11 +3,11 @@ shinyServer(function(input, output){
   data <- reactive({
     clnDta <- filter(emAdDta, Area == input$Area)
     
-    if(input$Area == "Data Zone"){
-      clnDta <- left_join(emAdDta, lablsDZ, by = c("ReferenceArea" = "DataZ")) %>%
+    if(input$Area == "Data Zones"){
+      clnDta <- left_join(clnDta, lablsDZ, by = c("ReferenceArea" = "DataZ")) %>%
         filter(., Council == input$Cncl)
-    }else if(input$Area == "Intermediate Geography"){
-      clnDta <- left_join(emAdDta, lablsIG, by = c("code" = "code")) %>%
+    }else if(input$Area == "Intermediate Zones"){
+      clnDta <- left_join(clnDta, lablsIG, by = c("code" = "code")) %>%
         filter(., Council == input$Cncl)
     }else{
       clnDta <- clnDta
@@ -18,7 +18,7 @@ shinyServer(function(input, output){
     if(input$graphType == "All"){
     dt <- data()
     dt <- filter(dt, variable == input$Ind)
-    }else if(input$Area != "Council"){
+    }else if(input$Area != "Council Areas"){
       dt <- data()
       dt <- filter(dt, variable == input$Ind)
       dt <- dt[order(dt$value),]
@@ -28,12 +28,12 @@ shinyServer(function(input, output){
   
   scotVal <- reactive({
     dt <- filter(emAdDta, variable == input$Ind)
-    SVal <- dt[dt$Area =="Scotland", 3]
+    SVal <- dt[dt$Area =="Country", 3]
   })
   
   output$barplot <- renderPlotly({
     dta <- data2()
-    if(input$Area != "Council"){
+    if(input$Area != "Council Areas"){
       p <- ggplot(data = dta) +
       geom_bar(aes(x = reorder(ReferenceArea, value), y = value), colour = "black",stat = "identity")+
       geom_hline(yintercept = scotVal(), colour = "red")+
