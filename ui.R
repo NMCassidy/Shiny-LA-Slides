@@ -9,5 +9,5 @@ shinyUI(fluidPage(
     conditionalPanel(condition = "input.Area != 'Council'", 
                      selectInput("graphType", "Select Data", c("All", "Top/Bottom Ten")))
   ),
-  mainPanel(plotlyOutput("barplot"), height = 20)
+  mainPanel(plotlyOutput("barplot"), height = 30)
 ))

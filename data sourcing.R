@@ -62,6 +62,40 @@ for(i in 1:nrow(Dests)){
   Dests$code[i] <- str_sub(Dests$code[i], start = 2, end = 10)
 }
 Dests <- Dests[c(1,2,3,5,4)]
-emAdDta <- rbind(emAdDta, Dests)
 
+JSAQry <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdmx: <http://purl.org/linked-data/sdmx/2009/concept#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?ReferenceArea ?code ?value ?Area
+WHERE {
+?s qb:dataSet <http://statistics.gov.scot/data/job-seekers-allowance>.
+?s <http://purl.org/linked-data/cube#measureType> <http://statistics.gov.scot/def/measure-properties/ratio>.
+?s <http://purl.org/linked-data/sdmx/2009/dimension#refPeriod> <http://reference.data.gov.uk/id/quarter/2012-Q4>.
+?s <http://statistics.gov.scot/def/dimension/gender> <http://statistics.gov.scot/def/concept/gender/all>.
+?s <http://statistics.gov.scot/def/measure-properties/ratio> ?value.
+?s <http://statistics.gov.scot/def/dimension/age> <http://statistics.gov.scot/def/concept/age/16-64>.
+?s <http://purl.org/linked-data/sdmx/2009/dimension#refArea> ?a.
+?a rdfs:label ?ReferenceArea.
+?a skos:notation ?code.
+?a <http://statistics.data.gov.uk/def/statistical-entity#code> ?e.
+?e rdfs:label ?Area
+}"
+
+JSADta <- SPARQL(endpoint, JSAQry)$results
+JSADta$variable <- rep("JSA Claimant Pct, 16-64", nrow(JSADta))
+for(i in 1:nrow(JSADta)){
+  JSADta$code[i] <- str_sub(JSADta$code[i], start = 2, end = 10)
+}
+JSADta <- JSADta[c(1,2,3,5,4)]
+JSADta <- JSADta[JSADta$Area %in% rowsKeep,]
+
+emAdDta <- rbind(emAdDta, Dests, JSADta)
 write.csv(emAdDta, "C:/Users/nickm/Google Drive/IS Work/Shiny LA Slides/dataset.csv")

@@ -30,16 +30,23 @@ shinyServer(function(input, output){
     dt <- filter(emAdDta, variable == input$Ind)
     SVal <- dt[dt$Area =="Country", 3]
   })
+  cnclVal <- reactive({
+    dt <- filter(emAdDta, Area == "Council Areas" & variable == input$Ind)
+    CVal <- dt[dt$`ReferenceArea` == input$Cncl, 3]
+  })
   
   output$barplot <- renderPlotly({
     dta <- data2()
     if(input$Area != "Council Areas"){
       p <- ggplot(data = dta) +
-      geom_bar(aes(x = reorder(ReferenceArea, value), y = value), colour = "black",stat = "identity")+
+      geom_bar(aes(x = reorder(ReferenceArea, value), y = value, text = paste("Area:", `ReferenceArea`)), fill = "black",stat = "identity")+
       geom_hline(yintercept = scotVal(), colour = "red")+
+      geom_hline(yintercept = cnclVal(), colour = "green")+
       xlab("")+
       ylab("")+
+      scale_x_discrete(label = abbreviate)+
       geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
+      geom_text(aes(x =length(`ReferenceArea`)/3, y = cnclVal(), label = paste("Council", as.character(cnclVal()))),colour = "green", nudge_y = -(cnclVal()/11))+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
     } else{
