@@ -1,5 +1,17 @@
 shinyServer(function(input, output){
   
+  
+  output$Ind <- renderUI({
+    fltDta <- data()
+    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
+  })
+  
+  output$graphType <- renderUI({
+    if(input$Area != "Council Areas"){
+      selectInput("graphType", "Select Data", c("All", "Top/Bottom Ten"))
+    }
+  })
+  
   data <- reactive({
     clnDta <- filter(emAdDta, Area == input$Area)
     
@@ -15,21 +27,21 @@ shinyServer(function(input, output){
   })
   
   data2 <- reactive({
-    if(input$graphType == "All"){
-    dt <- data()
-    dt <- filter(dt, variable == input$Ind)
-    }else if(input$Area != "Council Areas"){
-      dt <- data()
-      dt <- filter(dt, variable == input$Ind)
-      dt <- dt[order(dt$value),]
-      dt <- HiLoTen(dt)
-    }
+      if(input$Area =="Council Areas"){
+        dt <- data()
+        dt <- filter(dt, variable == input$Ind) 
+      }else if(input$graphType == "Top/Bottom Ten"){
+        dt <- data()
+        dt <- filter(dt, variable == input$Ind)
+        dt <- dt[order(dt$value),]
+        dt <- HiLoTen(dt)
+      } else{
+        dt <- data()
+        dt <- filter(dt, variable == input$Ind)
+      }
   })
   
-  output$Ind <- renderUI({
-    fltDta <- data()
-    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
-  })
+
   
   scotVal <- reactive({
     dt <- filter(emAdDta, variable == input$Ind)

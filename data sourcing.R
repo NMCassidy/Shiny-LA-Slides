@@ -1,4 +1,7 @@
 library(SPARQL)
+library(readr)
+library(reshape2)
+library(stringr)
 #Sparql for data 
 endpoint <- "http://statistics.gov.scot/sparql"
 
@@ -135,7 +138,7 @@ AttainDta <-AttainDta[c(1,2,3,5,4)]
 AttainDta <- AttainDta[AttainDta$Area %in% rowsKeep,]
 
 #Get some data zone only data and tidy it up for merging
-DZdta<-readRDS("Q:/Codes/Shiny Test GGplot/dataset")
+DZdta<-readRDS("Q:/Shiny LA Slides/dataset")
 cols <- c("datazone_2001","Percentage of the population income deprived 2011", "Percentage of the population employment deprived 2011","SIMD ranking 2012")
 DZdta <- DZdta[cols]
 DZdta <- melt(DZdta, id.vars = c("datazone_2001"))
@@ -143,6 +146,47 @@ DZdta$Area <- rep("Data Zones", nrow(DZdta))
 DZdta$code <- DZdta$datazone_2001  
 colnames(DZdta)[1] <- "ReferenceArea"
 DZdta <-DZdta[c(1,5,3,2,4)]
-emAdDta <- rbind(emAdDta, Dests, JSADta, AttainDta, DZdta)
+
+TSdta <- read_csv("Q:/Data/TariffScores.csv")
+TSdta <- melt(TSdta)
+TSdta$code <- TSdta$datazone
+TSdta$Area <- rep("Data Zones", nrow(TSdta))
+TSdta <- TSdta[c(1,4,3,2,5)]
+colnames(TSdta)[1] <- "ReferenceArea"
+
+emAdDta <- rbind(emAdDta, Dests, JSADta, AttainDta, DZdta, TSdta)
 
 write.csv(emAdDta, "Q:/Shiny LA Slides/dataset.csv")
+
+##SPARQL for geographic information
+endpoint <- "http://statistics.gov.scot/sparql"
+queryDZ <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?Council ?DataZ
+WHERE {
+?s <http://statistics.data.gov.uk/def/statistical-entity#code> <http://statistics.gov.scot/id/statistical-entity/S01>.
+?s <http://statistics.gov.scot/def/hierarchy/best-fit#council-area> ?cn.
+?cn rdfs:label ?Council.
+?s rdfs:label ?DataZ.
+?s <http://statistics.data.gov.uk/def/statistical-geography#status> 'Archive'  
+} ORDER BY (?DataZ)"
+
+lablsDZ <- SPARQL(endpoint, queryDZ)$results
+write.csv(lablsDZ, "Q:/Shiny LA Slides/DZlabels.csv")
+
+queryIG <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?Council ?IntZ ?code
+WHERE {
+?s <http://statistics.data.gov.uk/def/statistical-entity#code> <http://statistics.gov.scot/id/statistical-entity/S02>.
+?s <http://statistics.data.gov.uk/def/statistical-geography#parentcode> ?cn.
+?s <http://statistics.data.gov.uk/def/statistical-geography#status> 'Archive'.
+?cn rdfs:label ?Council.
+?s rdfs:label ?IntZ.   
+?s <http://www.w3.org/2004/02/skos/core#notation> ?code
+}"
+lablsIG <- SPARQL(endpoint, queryIG)$results
+for(i in 1:nrow(lablsIG)){
+  lablsIG$code[i] <- str_sub(lablsIG$code[i], start = 2, end = 10)
+}
+write.csv(lablsIG, "Q:/Shiny LA Slides/IGlabels.csv")
