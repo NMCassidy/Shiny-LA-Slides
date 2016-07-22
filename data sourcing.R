@@ -29,6 +29,9 @@ for(i in 1:nrow(emAdDta)){
 }
 rowsKeep <- c("Country", "Council Areas", "Intermediate Zones","Data Zones")
 emAdDta <- emAdDta[emAdDta$Area %in% rowsKeep,]
+emAdDta[emAdDta$variable == "All", 4] <- "Emergency Admission Rate per 10,000"
+emAdDta[emAdDta$variable == "65 And Over", 4] <- "Emergency Admission Rate per 10,000, Over 65s"
+
 
 queryDestinations <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
