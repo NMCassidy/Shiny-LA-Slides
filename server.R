@@ -26,6 +26,11 @@ shinyServer(function(input, output){
     }
   })
   
+  output$Ind <- renderUI({
+    fltDta <- data()
+    selectInput("Ind", "Select Indicator to Graph", unique(fltDta$variable))
+  })
+  
   scotVal <- reactive({
     dt <- filter(emAdDta, variable == input$Ind)
     SVal <- dt[dt$Area =="Country", 3]
@@ -44,6 +49,7 @@ shinyServer(function(input, output){
       geom_hline(yintercept = cnclVal(), colour = "green4")+
       xlab("")+
       ylab("")+
+      ggtitle(input$Ttl)+
       scale_x_discrete(label = abbreviate)+
       geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
       geom_text(aes(x =length(`ReferenceArea`)/4.5, y = cnclVal(), label = paste("Council", as.character(cnclVal()))),colour = "green4", nudge_y = -(cnclVal()/10))+
@@ -60,6 +66,7 @@ shinyServer(function(input, output){
         geom_hline(yintercept = scotVal(), colour = "red")+
         xlab("Council")+
         ylab("")+
+        ggtitle(input$Ttl)+
         geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland", as.character(scotVal()))), colour = "red", nudge_y = (scotVal()/11))+
         theme_bw()+
         scale_fill_manual(values = clrs)+

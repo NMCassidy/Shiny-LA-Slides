@@ -39,4 +39,4 @@ for(i in 1:nrow(lablsIG)){
 }
 
 #read data from csv
-emAdDta <- read.csv("C:/Users/nickm/Google Drive/IS Work/Shiny LA Slides/dataset.csv", stringsAsFactors = FALSE)[2:6]
+emAdDta <- read.csv("Q:/Shiny LA Slides/dataset.csv", stringsAsFactors = FALSE)[2:6]

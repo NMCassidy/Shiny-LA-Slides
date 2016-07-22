@@ -110,12 +110,12 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?ReferenceArea ?code ?value ?Area
 WHERE {
-?s qb:dataSet <http://statistics.gov.scot/data/job-seekers-allowance>.
+?s qb:dataSet <http://statistics.gov.scot/data/pupil-attainment>.
 ?s <http://purl.org/linked-data/cube#measureType> <http://statistics.gov.scot/def/measure-properties/ratio>.
-?s <http://purl.org/linked-data/sdmx/2009/dimension#refPeriod> <http://reference.data.gov.uk/id/quarter/2012-Q4>.
+?s <http://purl.org/linked-data/sdmx/2009/dimension#refPeriod> <http://reference.data.gov.uk/id/government-year/2012-2013>.
 ?s <http://statistics.gov.scot/def/dimension/gender> <http://statistics.gov.scot/def/concept/gender/all>.
 ?s <http://statistics.gov.scot/def/measure-properties/ratio> ?value.
-?s <http://statistics.gov.scot/def/dimension/age> <http://statistics.gov.scot/def/concept/age/16-64>.
+?s <http://statistics.gov.scot/def/dimension/scqfLevel> <http://statistics.gov.scot/def/concept/scqf-level/4-and-above>.
 ?s <http://purl.org/linked-data/sdmx/2009/dimension#refArea> ?a.
 ?a rdfs:label ?ReferenceArea.
 ?a skos:notation ?code.
@@ -123,7 +123,23 @@ WHERE {
 ?e rdfs:label ?Area
 }"
 
+AttainDta <- SPARQL(endpoint, AttainmentQry)$results
+AttainDta$variable <- rep("Pct of S4 Pupils Gaining 5 SCQF level 4 and above awards", nrow(AttainDta))
+for(i in 1:nrow(AttainDta)){
+  AttainDta$code[i] <- str_sub(AttainDta$code[i], start = 2, end = 10)
+}
+AttainDta <-AttainDta[c(1,2,3,5,4)]
+AttainDta <- AttainDta[AttainDta$Area %in% rowsKeep,]
 
+#Get some data zone only data and tidy it up for merging
+DZdta<-readRDS("Q:/Codes/Shiny Test GGplot/dataset")
+cols <- c("datazone_2001","Percentage of the population income deprived 2011", "Percentage of the population employment deprived 2011","SIMD ranking 2012")
+DZdta <- DZdta[cols]
+DZdta <- melt(DZdta, id.vars = c("datazone_2001"))
+DZdta$Area <- rep("Data Zones", nrow(DZdta))
+DZdta$code <- DZdta$datazone_2001  
+colnames(DZdta)[1] <- "ReferenceArea"
+DZdta <-DZdta[c(1,5,3,2,4)]
+emAdDta <- rbind(emAdDta, Dests, JSADta, AttainDta, DZdta)
 
-emAdDta <- rbind(emAdDta, Dests, JSADta)
-write.csv(emAdDta, "C:/Users/nickm/Google Drive/IS Work/Shiny LA Slides/dataset.csv")
+write.csv(emAdDta, "Q:/Shiny LA Slides/dataset.csv")
