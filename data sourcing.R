@@ -138,7 +138,7 @@ AttainDta <-AttainDta[c(1,2,3,5,4)]
 AttainDta <- AttainDta[AttainDta$Area %in% rowsKeep,]
 
 #Get some data zone only data and tidy it up for merging
-DZdta<-readRDS("Q:/Shiny LA Slides/dataset")
+DZdta<-readRDS("Q:/Shiny LA Slides/DZdataset")
 cols <- c("datazone_2001","Percentage of the population income deprived 2011", "Percentage of the population employment deprived 2011","SIMD ranking 2012")
 DZdta <- DZdta[cols]
 DZdta <- melt(DZdta, id.vars = c("datazone_2001"))

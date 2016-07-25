@@ -15,8 +15,8 @@ HiLoTen <- function(x, number = 10){
 }
 
 #read data from csv
-emAdDta <- read.csv("Q:/Shiny LA Slides/dataset.csv", stringsAsFactors = FALSE)[2:6]
+emAdDta <- read.csv("dataset.csv", stringsAsFactors = FALSE)[2:6]
 
 #labels data
-lablsDZ <- read_csv("Q:/Shiny LA Slides/DZlabels.csv")
-lablsIG <- read_csv("Q:/Shiny LA Slides/IGlabels.csv")
+lablsDZ <- read_csv("DZlabels.csv")[2:3]
+lablsIG <- read_csv("IGlabels.csv")[2:4]

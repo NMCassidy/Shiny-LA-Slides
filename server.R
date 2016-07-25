@@ -105,7 +105,4 @@ shinyServer(function(input, output){
     pp
   })
   
-#  output$barplot <- renderPlotly({
-#    return(plotInput())
-#  })
 })

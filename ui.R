@@ -1,5 +1,3 @@
-
-
 shinyUI(fluidPage(theme = shinytheme("readable"),
   titlePanel("Local Authority Slides"),
   mainPanel(plotlyOutput("barplot"), height = "1600px", width = "100%"),

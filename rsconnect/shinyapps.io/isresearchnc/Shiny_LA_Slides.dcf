@@ -2,9 +2,9 @@ name: Shiny_LA_Slides
 account: isresearchnc
 server: shinyapps.io
 appId: 116184
-bundleId: 512863
+bundleId: 514445
 url: https://isresearchnc.shinyapps.io/Shiny_LA_Slides/
-when: 1469197809.06622
+when: 1469434052.9312
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: csvDownload.R|data sourcing.R|dataset|HiLoFunction.R
+ignoredFiles: csvDownload.R|data sourcing.R|DZdataset|HiLoFunction.R
