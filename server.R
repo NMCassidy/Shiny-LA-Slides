@@ -64,9 +64,10 @@ shinyServer(function(input, output){
           xlab("")+
           ylab("")+
           ggtitle(input$Ttl)+
+        #  scale_y_continuous(breaks = sort(c(seq(round(min(dta$value)), max(dta$value), length.out = 5), scotVal(), cnclVal())), labels = )+
           scale_x_discrete(label = abbreviate)+
           geom_text(aes(x =length(`ReferenceArea`)/3.5, y = scotVal(), label = paste("Scotland:", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
-          geom_text(aes(x =length(`ReferenceArea`)/6.6, y = cnclVal(), label = paste("Council:", as.character(cnclVal()))),colour = "palegreen4", check_overlap = TRUE,nudge_y = -(cnclVal()/10))+
+          geom_text(aes(x =length(`ReferenceArea`)/7, y = cnclVal(), label = paste("Council:", as.character(cnclVal()))),colour = "palegreen4", check_overlap = TRUE,nudge_y = -(cnclVal()/10))+
           theme_bw()+
           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
                 panel.grid.major = element_blank(),
@@ -101,7 +102,18 @@ shinyServer(function(input, output){
               panel.grid.major = element_blank(),
               panel.grid.minor = element_blank())
     }
-    pp <- ggplotly(p, tooltip = c("text", "y"))
+    a <- list(
+      x = length(dta)/3,
+      y = scotVal(),
+      text = paste("Scotland:", scotVal()),
+      xref = "x",
+      yref = "y",
+      showarrow = TRUE,
+      arrowhead = 8,
+      ax = 40,
+      ay = -40
+    )
+    pp <- ggplotly(p, tooltip = c("text", "y")) %>% layout(annotations = a)
     pp
   })
   

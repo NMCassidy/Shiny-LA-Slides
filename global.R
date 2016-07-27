@@ -23,6 +23,8 @@ HiLoTen <- function(x, number = 10){
 #read data from database
 dd <- src_sqlite("dataset.db")
 emAdDta <- collect(tbl(dd, "actual"))
+emAdDta <- as.data.frame(emAdDta)
+emAdDta$value <- as.numeric(emAdDta$value)
 
 #labels data
 lablsDZ <- read_csv("DZlabels.csv")[2:3]
