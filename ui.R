@@ -1,6 +1,6 @@
 shinyUI(fluidPage(theme = shinytheme("readable"),
   titlePanel("Local Authority Slides"),
-  mainPanel(plotlyOutput("barplot"), height = "1600px", width = "100%"),
+  mainPanel(plotlyOutput("barplot"), height = "100%", width = "100%"),
   hr(),
   fluidRow(
     column(4,selectInput("Area", "Select Area Type", c("Council Areas", "Intermediate Zones","Data Zones")),

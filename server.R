@@ -65,8 +65,8 @@ shinyServer(function(input, output){
           ylab("")+
           ggtitle(input$Ttl)+
           scale_x_discrete(label = abbreviate)+
-          geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland:", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
-          geom_text(aes(x =length(`ReferenceArea`)/4.5, y = cnclVal(), label = paste("Council:", as.character(cnclVal()))),colour = "green4", nudge_y = -(cnclVal()/10))+
+          geom_text(aes(x =length(`ReferenceArea`)/3.5, y = scotVal(), label = paste("Scotland:", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
+          geom_text(aes(x =length(`ReferenceArea`)/6.6, y = cnclVal(), label = paste("Council:", as.character(cnclVal()))),colour = "palegreen4", check_overlap = TRUE,nudge_y = -(cnclVal()/10))+
           theme_bw()+
           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
                 panel.grid.major = element_blank(),
