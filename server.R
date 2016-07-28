@@ -151,10 +151,10 @@ shinyServer(function(input, output){
     dta <- data2()[c("ReferenceArea", "variable", "value")]
   })
   
-  output$dlAllData <- downloadHandler({
-    filename = function(){ paste0(input$Ind, ".csv")}
-    content = function(file){
-      write.csv(dataExp(), file)
+  output$dlAllData <- downloadHandler(
+    filename = function() {paste(as.character(input$Ind), ".csv", sep = "")},
+    content = function(file) {
+      write.csv(indicatorDta(), file)
     }
-  })
+  )
 })
