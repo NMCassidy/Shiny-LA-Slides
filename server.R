@@ -41,7 +41,9 @@ shinyServer(function(input, output){
       }
   })
   
-
+   indicatorDta <- reactive({
+     dt <- filter(emAdDta, variable == input$Ind) 
+   })
   
   scotVal <- reactive({
     dt <- filter(emAdDta, variable == input$Ind)
@@ -116,7 +118,7 @@ shinyServer(function(input, output){
       clrs <- c(rep("black", nmbr-1), "blue", rep("black", (32 - nmbr)))
       p <- ggplot(data = dta) +
         geom_bar(aes(x = reorder(`ReferenceArea`, value), y = value, text = paste("Council:", `ReferenceArea`)),stat = "identity", fill = clrs)+
-        geom_hline(yintercept = scotVal(), colour = "red", text = paste("Scotland Average:", scotVal()))+
+        geom_hline(yintercept = scotVal(), colour = "red", aes(text = paste("Scotland Average:", scotVal())))+
         xlab("Council")+
         ylab("")+
         ggtitle(input$Ttl)+
@@ -145,4 +147,14 @@ shinyServer(function(input, output){
     pp
   })
   
+  output$dataExp <- renderDataTable({
+    dta <- data2()[c("ReferenceArea", "variable", "value")]
+  })
+  
+  output$dlAllData <- downloadHandler({
+    filename = function(){ paste0(input$Ind, ".csv")}
+    content = function(file){
+      write.csv(dataExp(), file)
+    }
+  })
 })

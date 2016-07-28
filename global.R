@@ -27,5 +27,7 @@ emAdDta <- as.data.frame(emAdDta)
 emAdDta$value <- as.numeric(emAdDta$value)
 
 #labels data
-lablsDZ <- read_csv("DZlabels.csv")[2:3]
-lablsIG <- read_csv("IGlabels.csv")[2:4]
+lablsDZ <- collect(tbl(dd, "dzlabels"))
+lablsDZ <- as.data.frame(lablsDZ)
+lablsIG <- collect(tbl(dd, "iglabels"))
+lablsIG <- as.data.frame(lablsIG)
