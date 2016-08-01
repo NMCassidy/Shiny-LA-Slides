@@ -157,4 +157,11 @@ shinyServer(function(input, output){
       write.csv(indicatorDta(), file)
     }
   )
+  n <- 1
+  output$dlPlot <- downloadHandler(
+    filename = function(){paste("graph", n, ".png", sep ="")},
+    content = function(file){
+      ggsave(file, plot = barplot(), device = "png")
+    }
+  )
 })

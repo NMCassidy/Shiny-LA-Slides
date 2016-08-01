@@ -7,7 +7,9 @@ shinyUI(fluidPage(theme = shinytheme("readable"),
     uiOutput("Ind"),
     textInput("Ttl", "Insert a Plot Title", value = ""), 
     downloadButton("dlAllData", "Download All Indicator Data"),
+    downloadButton("dlPlot", "Download Plot"),
     width = 3),
+    
   mainPanel(tabsetPanel(tabPanel("Plot",plotlyOutput("barplot"), height = "100%"),
               tabPanel("Data Explorer", dataTableOutput("dataExp"))), width = 9)
   )
