@@ -16,7 +16,7 @@ HiLoTen <- function(x, number = 10){
   top_ten<-head(x, n = (nrow(x)/2))
   bot_ten<-tail(x, n = (nrow(x)/2))  
   }
-  top_bot_df<-rbind(top_ten, bot_ten)
+  top_bot_df<-na.omit(rbind(top_ten, bot_ten))
   return(top_bot_df)
 }
 
