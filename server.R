@@ -76,7 +76,7 @@ shinyServer(function(input, output){
                 panel.grid.minor = element_blank())
         a <- list()
         a[[1]] <- list(
-          x = nrow(dta)/10,
+          x = nrow(dta)/13,
           y = scotVal(),
           text = paste("Scotland:", scotVal()),
           xref = "x",
@@ -88,7 +88,7 @@ shinyServer(function(input, output){
           colour = "red"
         )
         a[[2]] <- list(
-          x = nrow(dta)/5,
+          x = nrow(dta)/4,
           y = cnclVal(),
           text = paste("Council:", cnclVal()),
           xref = "x",
