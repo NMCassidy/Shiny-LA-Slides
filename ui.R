@@ -10,7 +10,7 @@ shinyUI(fluidPage(theme = shinytheme("readable"),
     downloadButton("dlPlot", "Download Plot"),
     width = 3),
     
-  mainPanel(tabsetPanel(tabPanel("Plot",plotlyOutput("barplot"), height = "100%"),
+  mainPanel(tabsetPanel(tabPanel("Plot",plotlyOutput("brpltRnd"), height = "1200px"),
               tabPanel("Data Explorer", dataTableOutput("dataExp"))), width = 9)
   )
 )

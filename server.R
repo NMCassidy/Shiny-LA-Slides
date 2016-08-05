@@ -54,7 +54,7 @@ shinyServer(function(input, output){
       CVal <- dt[dt$`ReferenceArea` == input$Cncl, 3]
       })
   
-  output$barplot <- renderPlotly({
+  brplt <- function(){
     dta <- data2()
     if(input$Area != "Council Areas"){
       scotVal <- scotVal()
@@ -143,8 +143,12 @@ shinyServer(function(input, output){
         colour = "red"
       )
     }
-    pp <- ggplotly(p, tooltip = c("text", "y")) %>% layout(annotations = a)
-    pp
+      pp <- ggplotly(p, tooltip = c("text", "y")) %>% layout(annotations = a)
+      return(pp)
+  }
+  
+  output$brpltRnd <- renderPlotly({
+    brplt()
   })
   
   output$dataExp <- renderDataTable({
@@ -157,11 +161,10 @@ shinyServer(function(input, output){
       write.csv(indicatorDta(), file)
     }
   )
-  n <- 1
   output$dlPlot <- downloadHandler(
-    filename = function(){paste("graph", n, ".png", sep ="")},
+    filename = function(){paste(input$Ind, ".png", sep ="")},
     content = function(file){
-      ggsave(file, plot = barplot(), device = "png")
+      plotly_IMAGE(x = brplt(), out_file = file, format = "png")
     }
   )
 })
