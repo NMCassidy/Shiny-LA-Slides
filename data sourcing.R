@@ -156,6 +156,26 @@ colnames(TSdta)[1] <- "ReferenceArea"
 
 emAdDta <- rbind(emAdDta, Dests, JSADta, AttainDta, DZdta, TSdta)
 
+library(readstata13)
+LAD <- read.dta13("S:/G - Governance & Performance Mngmt/Research Team/Local Authority Slides/Local Authority Slides - January 2015 Update/Data/LAdata.dta")
+colskeep <- c("laname", "lacode", "csincdeprived_2011", "csempdeprived_2011", "edsqass4avgts_201213", "edsqass5avgts_201213")
+LADDIE <- LAD[colskeep]
+LADDIE <- melt(LADDIE, idvars = c("laname", "lacode"))
+LADDIE$Area <- rep("Council Areas", nrow(LADDIE))
+LADDIE[nrow(LADDIE)+1, ] <- c("Scotland", "S92000003","csincdeprived_2011", 13, "Country")
+LADDIE[nrow(LADDIE)+1, ] <- c("Scotland", "S92000003","csempdeprived_2011", 13, "Country")
+LADDIE[nrow(LADDIE)+1, ] <- c("Scotland", "S92000003","edsqass4avgts_201213", 193, "Country")
+LADDIE[nrow(LADDIE)+1, ] <- c("Scotland", "S92000003","edsqass5avgts_201213", 356, "Country")
+LADDIE <- LADDIE[c(1,2,4,3,5)]
+colnames(LADDIE) <- colnames(emAdDta)
+LADDIE$variable <- as.character(LADDIE$variable)
+LADDIE[LADDIE$variable == "csincdeprived_2011", 4] <-"Percentage of the population income deprived 2011"
+LADDIE[LADDIE$variable == "csempdeprived_2011", 4] <-"Percentage of the population employment deprived 2011"
+LADDIE[LADDIE$variable == "edsqass4avgts_201213", 4] <-"S4 Average Tariff Score 2012/13"
+LADDIE[LADDIE$variable == "edsqass5avgts_201213", 4] <-"S5 Average Tariff Score2012/13"
+emAdDta <- rbind(emAdDta, LADDIE)
+emAdDta[emAdDta$ReferenceArea=="Edinburgh, City of",1] <- "City of Edinburgh"
+emAdDta[emAdDta$ReferenceArea=="Eilean Siar",1] <- "Comhairle nan Eilean Siar"
 write.csv(emAdDta, "Q:/Shiny LA Slides/dataset.csv")
 
 ##SPARQL for geographic information
@@ -190,3 +210,6 @@ for(i in 1:nrow(lablsIG)){
   lablsIG$code[i] <- str_sub(lablsIG$code[i], start = 2, end = 10)
 }
 write.csv(lablsIG, "Q:/Shiny LA Slides/IGlabels.csv")
+
+
+

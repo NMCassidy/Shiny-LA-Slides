@@ -7,6 +7,7 @@ library(plotly)
 library(stringr)
 library(shinythemes)
 library(RSQLite)
+library(DT)
 
 HiLoTen <- function(x, number = 10){
   x <- na.omit(x)
