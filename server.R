@@ -1,10 +1,10 @@
 shinyServer(function(input, output){
   
-  
-  output$Ind <- renderUI({
-    fltDta <- data()
-    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
-  })
+## Reactive UI for selecting indicators - makes changing council reset selection  
+#  output$Ind <- renderUI({
+#    fltDta <- data()
+#    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
+#  })
   
   output$graphType <- renderUI({
     if(input$Area != "Council Areas"){
@@ -151,8 +151,12 @@ shinyServer(function(input, output){
     brplt()
   })
   
-  output$dataExp <- renderDataTable({
+  output$dataExp <- DT::renderDataTable({
     dta <- data2()[c("ReferenceArea", "variable", "value")]
+    datatable(dta, extensions = c("FixedColumns", "ColReorder", "KeyTable"),
+    options = list(colReorder = TRUE, fixedColumns = list(leftColumns = 1), keys = TRUE),
+    colnames = c("Area", "Indicator", "Value")) %>%
+      formatStyle("value", fontWeight = "bold")
   })
   
   output$dlAllData <- downloadHandler(
@@ -161,6 +165,7 @@ shinyServer(function(input, output){
       write.csv(indicatorDta(), file)
     }
   )
+  
   output$dlPlot <- downloadHandler(
     filename = function(){paste(input$Ind, ".png", sep ="")},
     content = function(file){
