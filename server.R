@@ -1,10 +1,10 @@
 shinyServer(function(input, output){
   
-## Reactive UI for selecting indicators - makes changing council reset selection  
-#  output$Ind <- renderUI({
-#    fltDta <- data()
-#    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
-#  })
+# Reactive UI for selecting indicators - makes changing council reset selection  
+  output$Ind <- renderUI({
+    fltDta <- data()
+    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
+  })
   
   output$graphType <- renderUI({
     if(input$Area != "Council Areas"){
@@ -62,7 +62,7 @@ shinyServer(function(input, output){
         p <- ggplot(data = dta) +
           geom_bar(aes(x = reorder(ReferenceArea, value), y = value, text = paste("Area:", `ReferenceArea`)), fill = "black",stat = "identity")+
           geom_hline(yintercept = cnclVal(), colour = "green4")+
-          geom_hline(yintercept = scotVal(), colour = "red")+
+          geom_hline(yintercept = scotVal + 0.00000001, colour = "red")+
           xlab("")+
           ylab("")+
           ggtitle(input$Ttl)+
@@ -73,7 +73,10 @@ shinyServer(function(input, output){
           theme_bw()+
           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
                 panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank())
+                panel.grid.minor = element_blank(),
+                panel.border = element_blank(),
+                axis.line.y = element_line(colour = "black", "size = 0.6"),
+                axis.line.x = element_line(colour = "black", "size = 0.6"))
         a <- list()
         a[[1]] <- list(
           x = nrow(dta)/13,
@@ -109,7 +112,10 @@ shinyServer(function(input, output){
           theme_bw()+
           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
                 panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank())
+                panel.grid.minor = element_blank(),
+                panel.border = element_blank(),
+                axis.line.y = element_line(colour = "black", "size = 0.6"),
+                axis.line.x = element_line(colour = "black", "size = 0.6"))
         a = NULL
       } 
     } else{
@@ -128,7 +134,10 @@ shinyServer(function(input, output){
         guides(fill = FALSE)+
         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
               panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank())
+              panel.grid.minor = element_blank(),
+              panel.border = element_blank(),
+              axis.line.y = element_line(colour = "black", "size = 0.6"),
+              axis.line.x = element_line(colour = "black", "size = 0.6"))
       a <- list()
       a[[1]] <- list(
         x = nrow(dta)/10,
