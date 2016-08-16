@@ -8,7 +8,7 @@ library(stringr)
 library(shinythemes)
 library(RSQLite)
 library(DT)
-
+# High and Low function - sorts top and bottom ten values
 HiLoTen <- function(x, number = 10){
   x <- na.omit(x)
   if(nrow(x)>= 20){
@@ -28,7 +28,7 @@ emAdDta <- collect(tbl(dd, "actual"))
 emAdDta <- as.data.frame(emAdDta)
 emAdDta$value <- as.numeric(emAdDta$value)
 
-#labels data
+#labels data from database
 lablsDZ <- collect(tbl(dd, "dzlabels"))
 lablsDZ <- as.data.frame(lablsDZ)
 lablsIG <- collect(tbl(dd, "iglabels"))

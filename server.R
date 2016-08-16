@@ -1,17 +1,18 @@
 shinyServer(function(input, output){
   
-# Reactive UI for selecting indicators - makes changing council reset selection  
+# Reactive UI for selecting indicators
   output$Ind <- renderUI({
     fltDta <- data()
-    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)))
+    selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)),
+                selected = input$Ind)
   })
-  
+# Ability to switch between all data or top and bottom ten values  
   output$graphType <- renderUI({
     if(input$Area != "Council Areas"){
       selectInput("graphType", "Select Data", c("All", "Top/Bottom Ten"))
     }
   })
-  
+# Reactive funtions to filter data based on area type and all data or top and bottom ten  
   data <- reactive({
     clnDta <- filter(emAdDta, Area == input$Area)
     
@@ -40,11 +41,11 @@ shinyServer(function(input, output){
         dt <- filter(dt, variable == input$Ind)
       }
   })
-  
+# Filter all indicator data for download  
    indicatorDta <- reactive({
      dt <- filter(emAdDta, variable == input$Ind) 
    })
-  
+# Get value for Scotland and Council in order to make horizontal line  
   scotVal <- reactive({
     dt <- filter(emAdDta, variable == input$Ind)
     SVal <- dt[dt$Area =="Country", 3]
@@ -53,7 +54,7 @@ shinyServer(function(input, output){
     dt <- filter(emAdDta, Area == "Council Areas" & variable == input$Ind)
       CVal <- dt[dt$`ReferenceArea` == input$Cncl, 3]
       })
-  
+#Produce barplot  
   brplt <- function(){
     dta <- data2()
     if(input$Area != "Council Areas"){
@@ -159,7 +160,7 @@ shinyServer(function(input, output){
   output$brpltRnd <- renderPlotly({
     brplt()
   })
-  
+# Create data explorer 
   output$dataExp <- DT::renderDataTable({
     dta <- data2()[c("ReferenceArea", "variable", "value")]
     datatable(dta, extensions = c("FixedColumns", "ColReorder", "KeyTable"),
@@ -167,14 +168,14 @@ shinyServer(function(input, output){
     colnames = c("Area", "Indicator", "Value")) %>%
       formatStyle("value", fontWeight = "bold")
   })
-  
+# Download dataset
   output$dlAllData <- downloadHandler(
     filename = function() {paste(as.character(input$Ind), ".csv", sep = "")},
     content = function(file) {
       write.csv(indicatorDta(), file)
     }
   )
-  
+# Download plot    
   output$dlPlot <- downloadHandler(
     filename = function(){paste(input$Ind, ".png", sep ="")},
     content = function(file){
