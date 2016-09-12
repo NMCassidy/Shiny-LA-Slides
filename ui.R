@@ -1,6 +1,7 @@
 shinyUI(fluidPage(theme = shinytheme("readable"),
-  titlePanel("Local Authority Slides"),
+  titlePanel("Local Authority Slides"), 
   sidebarPanel(
+    selectInput("SIMD", "Select SIMD Data to Examine", c("SIMD 2012", "SIMD 2016")),
     selectInput("Area", "Select Area Type", c("Council Areas", "Intermediate Zones","Data Zones")),
     uiOutput("graphType"),
     selectInput("Cncl", "Select Council Area", sort(unique(emAdDta[emAdDta$Area == "Council Areas", 1]))),
@@ -10,7 +11,7 @@ shinyUI(fluidPage(theme = shinytheme("readable"),
     downloadButton("dlPlot", "Download Plot"),
     width = 3),
     
-  mainPanel(tabsetPanel(tabPanel("Plot",plotlyOutput("brpltRnd"), height = "1200px"),
+  mainPanel(tabsetPanel(tabPanel("Plot",plotlyOutput("brpltRnd")),
               tabPanel("Data Explorer", DT::dataTableOutput("dataExp"))), width = 9)
   )
 )

@@ -33,3 +33,7 @@ lablsDZ <- collect(tbl(dd, "dzlabels"))
 lablsDZ <- as.data.frame(lablsDZ)
 lablsIG <- collect(tbl(dd, "iglabels"))
 lablsIG <- as.data.frame(lablsIG)
+
+#read SIMD 16 data
+dat16 <- readRDS("SIMD16.rds")
+dat16$ReferenceArea <- as.character(dat16$ReferenceArea)

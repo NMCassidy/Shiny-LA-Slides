@@ -14,6 +14,7 @@ shinyServer(function(input, output){
   })
 # Reactive funtions to filter data based on area type and all data or top and bottom ten  
   data <- reactive({
+    if(input$SIMD == "SIMD 2012"){
     clnDta <- filter(emAdDta, Area == input$Area)
     
     if(input$Area == "Data Zones"){
@@ -24,6 +25,17 @@ shinyServer(function(input, output){
         filter(., Council == input$Cncl)
     }else{
       clnDta <- clnDta
+    }
+    }else if(input$SIMD == "SIMD 2016"){
+      clnDta <- filter(dat16, Area == input$Area)
+      
+      if(input$Area == "Data Zones"){
+        clnDta <- filter(clnDta, Council == input$Cncl)
+      }else if(input$Area == "Intermediate Zones"){
+        clnDta <- filter(clnDta, Council == input$Cncl)
+      }else{
+        clnDta <- clnDta
+      }
     }
   })
   
@@ -43,16 +55,31 @@ shinyServer(function(input, output){
   })
 # Filter all indicator data for download  
    indicatorDta <- reactive({
+     if(input$SIMD == "SIMD 2012"){
      dt <- filter(emAdDta, variable == input$Ind) 
-   })
+     } else if(input$SIMD == "SIMD 2016"){
+       dt <- filter(dat16, variable == input$Ind)
+     }
+     
+      })
 # Get value for Scotland and Council in order to make horizontal line  
   scotVal <- reactive({
-    dt <- filter(emAdDta, variable == input$Ind)
+    if(input$SIMD == "SIMD 2012"){
+      dt <- filter(emAdDta, variable == input$Ind)
     SVal <- dt[dt$Area =="Country", 3]
-  })
+    }else if(input$SIMD == "SIMD 2016"){
+      dt <- filter(dat16, variable == input$Ind)
+      SVal <- dt[dt$Area =="Country", 3]
+    }
+    })
   cnclVal <- reactive({
+    if(input$SIMD == "SIMD 2012"){
     dt <- filter(emAdDta, Area == "Council Areas" & variable == input$Ind)
       CVal <- dt[dt$`ReferenceArea` == input$Cncl, 3]
+    } else if(input$SIMD == "SIMD 2016"){
+      dt <- filter(dat16, Area == "Council Areas" & variable == input$Ind)
+      CVal <- dt[dt$`ReferenceArea` == input$Cncl, 3]
+    }
       })
 #Produce barplot  
   brplt <- function(){
