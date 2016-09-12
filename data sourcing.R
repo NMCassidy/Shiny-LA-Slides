@@ -4,7 +4,7 @@ library(reshape2)
 library(stringr)
 #Sparql for data 
 endpoint <- "http://statistics.gov.scot/sparql"
-
+#Emergency Admissions
 emAdQry <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX qb: <http://purl.org/linked-data/cube#>
@@ -35,7 +35,7 @@ emAdDta <- emAdDta[emAdDta$Area %in% rowsKeep,]
 emAdDta[emAdDta$variable == "All", 4] <- "Emergency Admission Rate per 10,000"
 emAdDta[emAdDta$variable == "65 And Over", 4] <- "Emergency Admission Rate per 10,000, Over 65s"
 
-
+#School destinations
 queryDestinations <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -68,7 +68,7 @@ for(i in 1:nrow(Dests)){
   Dests$code[i] <- str_sub(Dests$code[i], start = 2, end = 10)
 }
 Dests <- Dests[c(1,2,3,5,4)]
-
+#Job Seeker's Allowance
 JSAQry <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -102,7 +102,7 @@ for(i in 1:nrow(JSADta)){
 }
 JSADta <- JSADta[c(1,2,3,5,4)]
 JSADta <- JSADta[JSADta$Area %in% rowsKeep,]
-
+#School Attainment
 AttainmentQry <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
