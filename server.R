@@ -205,7 +205,7 @@ shinyServer(function(input, output, session){
   )
 # Download plot    
   output$dlPlot <- downloadHandler(
-    filename = function(){paste(input$Ind, ".png", sep ="")},
+    filename = function() {paste(as.character(input$Ind), ".png", sep ="")},
     content = function(file){
       plotly_IMAGE(x = brplt(), out_file = file, format = "png")
     }

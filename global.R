@@ -9,6 +9,10 @@ library(stringr)
 library(RSQLite)
 library(DT)
 library(shinydashboard)
+
+Sys.setenv("plotly_username" = "NMCassidy")
+Sys.setenv("plotly_api_key" = "xwk9zuxumf")
+
 # High and Low function - sorts top and bottom ten values
 HiLoTen <- function(x, number = 10){
   x <- na.omit(x)
