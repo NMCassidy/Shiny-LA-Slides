@@ -1,4 +1,4 @@
-shinyServer(function(input, output){
+shinyServer(function(input, output, session){
   
 # Reactive UI for selecting indicators
   output$Ind <- renderUI({
@@ -98,7 +98,7 @@ shinyServer(function(input, output){
           scale_x_discrete(label = abbreviate)+
       #    geom_text(aes(x =length(`ReferenceArea`)/3.5, y = scotVal(), label = paste("Scotland:", as.character(scotVal()))),colour = "red", nudge_y = (scotVal()/11))+
       #    geom_text(aes(x =length(`ReferenceArea`)/7, y = cnclVal(), label = paste("Council:", as.character(cnclVal()))),colour = "palegreen4", check_overlap = TRUE,nudge_y = -(cnclVal()/10))+
-          theme_bw()+
+          theme_hc()+
           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
@@ -121,7 +121,7 @@ shinyServer(function(input, output){
         a[[2]] <- list(
           x = nrow(dta)/4,
           y = cnclVal(),
-          text = paste("Council:", cnclVal()),
+          text = paste0(as.character(input$Cncl),": ", cnclVal()),
           xref = "x",
           yref = "y",
           showarrow = TRUE,
@@ -137,7 +137,7 @@ shinyServer(function(input, output){
           ylab("")+
           ggtitle(input$Ttl)+
           scale_x_discrete(label = abbreviate)+
-          theme_bw()+
+          theme_hc()+
           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
@@ -157,7 +157,7 @@ shinyServer(function(input, output){
         ylab("")+
         ggtitle(input$Ttl)+
       #  geom_text(aes(x =length(`ReferenceArea`)/4, y = scotVal(), label = paste("Scotland:", as.character(scotVal()))), colour = "red", nudge_y = (scotVal()/11))+
-        theme_bw()+
+        theme_hc()+
         scale_fill_manual(values = clrs)+
         guides(fill = FALSE)+
         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
@@ -180,7 +180,8 @@ shinyServer(function(input, output){
         colour = "red"
       )
     }
-      pp <- ggplotly(p, tooltip = c("text", "y")) %>% layout(annotations = a)
+      pp <- ggplotly(p, tooltip = c("text", "y")) %>% layout(autosize = FALSE,
+                                                             annotations = a, height = 750, width = 920)
       return(pp)
   }
   
