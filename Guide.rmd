@@ -1,0 +1,55 @@
+---
+output: html_document
+---
+
+# *Local Authority Slides Quick Guide*  
+The Local Authority Slides allow you to easily look through SIMD 2012 and SIMD 2016 data for local authorities, and the intermediate zones and data zones within them. The slides can be found by following this link: <https://isresearchnc.shinyapps.io/Shiny_LA_Slides/>.  
+As there are geographical boundary changes and changes to how the indicators were calculated the two datasets are not comparable. For more information on SIMD go to <http://www.gov.scot/Topics/Statistics/SIMD>.  
+
+***
+
+# *Creating a Plot*
+The sidebar on the left provides you with five drop-down lists for choosing which data to view.   The options are:
+
+### Select SIMD Data to Examine
+Use this option to select whether to examine the SIMD 2012 or SIMD 2016 dataset.  
+
+### Select Area Type
+This option allows you to choose which geographical level you wish to view data on. The options are: 
+
+* __Council Areas__ - data for Scotland's 32 Local Authority Areas.
+
+* __Intermediate Zones__ - A small area geography between local authority and data zones within which multiple data zones are nested.  
+
+* __Data Zones__ - A small area geography used for the publication of key statistics. Each data zone is designed to contain roughly similar populations of between 500 and 1000.  SIMD 2012 is built on 6505 data zones based on the 2001 Census, while SIMD 2016 uses an updated set of 6976 data zones based on the 2011 Census.  
+
+### Select Data  
+This option only exists if either _Intermediate Zones_ or _Data Zones_ is selected in the __Select Area Type__ drop-down list. It allows you to choose whether to view data for all data zones or intermediate zones within the selected local authority, or to view only the top and bottom ten values.  
+
+### Select Council Area  
+This list allows you to select one of Scotland's 32 Local Authority Areas.  If _Council Areas_ is selected in the __Select Area Type__ option the selected local authority will be highlighted in the plot.  If either _Data Zones_ or _Intermediate Zones_ is selected the plot will display the data zone or intermediate zone data for that selected local authority.  
+
+### Select Indicator to Graph  
+Use this option to select the indicator to view. SIMD rankings are only available if the _Data Zones_ option is selected in the __Select Area Type__ drop-down list.
+
+### Insert a Plot Title  
+Use this option to add a title to the plot. 
+
+***
+
+# *Download Buttons*
+
+### Download All Indicator Data
+This button allows you to download all of the data for whichever indicator is selected in the _Select Indicator to Graph_ drop-down list.  
+
+### Download Plot
+Use this button to download the plot you have created. 
+
+***
+
+# *Other Features*
+* __Hover for details__ - Hovering over a bar on the plot will display the name of that area and its value for the selected indicator. 
+
+* __Drag to Zoom__ - Drag over an area on the plot to zoom in, double click to zoom back out.
+
+* __Data Explorer__ - Select the Data Explorer option at the top of the page to view the data behind your plot in table form.
