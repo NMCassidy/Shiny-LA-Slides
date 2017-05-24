@@ -3,8 +3,8 @@ shinyUI(navbarPage("Local Authority Slides", theme = "bootstrap.css",
     tabPanel("Plot",
     sidebarLayout(
         sidebarPanel(
-    selectInput("SIMD", "Select SIMD Data to Examine", c("SIMD 2012", "SIMD 2016")),
-    selectInput("Area", "Select Area Type", c("Council Areas", "Intermediate Zones","Data Zones")),
+    selectInput("SIMD", "Select SIMD Data to Examine", c("SIMD 2012", "SIMD 2016", "Incomes Data")),
+    uiOutput("AreaType"),
     uiOutput("graphType"),
     selectInput("Cncl", "Select Council Area", sort(unique(emAdDta[emAdDta$Area == "Council Areas", 1]))),
     uiOutput("Ind"),

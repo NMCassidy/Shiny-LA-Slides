@@ -44,4 +44,4 @@ dat16 <- readRDS("SIMD16.rds")
 dat16$ReferenceArea <- as.character(dat16$ReferenceArea)
 
 #read Incomes Data
-datinc <- readRDS("C:/users/cassidy.nicholas/OneDrive - IS/Shiny LA Slides/IncomeData.rds")
+datinc <- readRDS("C:/users/cassidy.nicholas/OneDrive - IS/Shiny-LA-Slides/IncomeData.rds")

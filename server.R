@@ -6,6 +6,13 @@ shinyServer(function(input, output, session){
     selectInput("Ind", "Select Indicator to Graph", sort(unique(fltDta$variable)),
                 selected = input$Ind)
   })
+  output$AreaType <- renderUI({
+      if(input$SIMD != "Incomes Data"){
+        selectInput("Area", "Select Area Type", c("Council Areas", "Intermediate Zones","Data Zones"))
+      } else{
+        selectInput("Area", "Select Area Type", c("Data Zones"))
+      }
+    })
 # Ability to switch between all data or top and bottom ten values  
   output$graphType <- renderUI({
     if(input$Area != "Council Areas"){
@@ -180,8 +187,8 @@ shinyServer(function(input, output, session){
         colour = "red"
       )
     }
-      pp <- ggplotly(p, tooltip = c("text", "y")) %>% layout(autosize = FALSE,
-                                                             annotations = a, height = 750, width = 920)
+      pp <- ggplotly(p, tooltip = c("text", "y"), height = 750, width = 920) %>% layout(autosize = FALSE,
+                                                             annotations = a)
       return(pp)
   }
   
