@@ -2,6 +2,7 @@ library(SPARQL)
 library(readr)
 library(reshape2)
 library(stringr)
+library(dplyr)
 #Sparql for data 
 endpoint <- "http://statistics.gov.scot/sparql"
 #Emergency Admissions
@@ -138,7 +139,7 @@ AttainDta <-AttainDta[c(1,2,3,5,4)]
 AttainDta <- AttainDta[AttainDta$Area %in% rowsKeep,]
 
 #Get some data zone only data and tidy it up for merging
-DZdta<-readRDS("Q:/Shiny LA Slides/DZdataset")
+DZdta<-readRDS("C:/users/cassidy.nicholas/OndeDrive-IS/Shiny LA Slides/DZdataset")
 cols <- c("datazone_2001","Percentage of the population income deprived 2011", "Percentage of the population employment deprived 2011","SIMD ranking 2012")
 DZdta <- DZdta[cols]
 DZdta <- melt(DZdta, id.vars = c("datazone_2001"))
@@ -147,7 +148,7 @@ DZdta$code <- DZdta$datazone_2001
 colnames(DZdta)[1] <- "ReferenceArea"
 DZdta <-DZdta[c(1,5,3,2,4)]
 
-TSdta <- read_csv("Q:/Data/TariffScores.csv")
+TSdta <- read_csv("C:/users/cassidy.nicholas/OneDrive - IS/Data/TariffScores.csv")
 TSdta <- melt(TSdta)
 TSdta$code <- TSdta$datazone
 TSdta$Area <- rep("Data Zones", nrow(TSdta))
@@ -176,7 +177,7 @@ LADDIE[LADDIE$variable == "edsqass5avgts_201213", 4] <-"S5 Average Tariff Score2
 emAdDta <- rbind(emAdDta, LADDIE)
 emAdDta[emAdDta$ReferenceArea=="Edinburgh, City of",1] <- "City of Edinburgh"
 emAdDta[emAdDta$ReferenceArea=="Eilean Siar",1] <- "Comhairle nan Eilean Siar"
-write.csv(emAdDta, "Q:/Shiny LA Slides/dataset.csv")
+write.csv(emAdDta, "C:/users/cassidy.nicholas/OneDrive - IS/Shiny LA Slides/dataset.csv")
 
 ##SPARQL for geographic information
 endpoint <- "http://statistics.gov.scot/sparql"
@@ -188,11 +189,10 @@ WHERE {
 ?s <http://statistics.gov.scot/def/hierarchy/best-fit#council-area> ?cn.
 ?cn rdfs:label ?Council.
 ?s rdfs:label ?DataZ.
-?s <http://statistics.data.gov.uk/def/statistical-geography#status> 'Archive'  
 } ORDER BY (?DataZ)"
 
 lablsDZ <- SPARQL(endpoint, queryDZ)$results
-write.csv(lablsDZ, "Q:/Shiny LA Slides/DZlabels.csv")
+write.csv(lablsDZ, "C:/users/cassidy.nicholas/OneDrive - IS/Shiny LA Slides/DZlabels.csv")
 
 queryIG <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -200,7 +200,6 @@ SELECT ?Council ?IntZ ?code
 WHERE {
 ?s <http://statistics.data.gov.uk/def/statistical-entity#code> <http://statistics.gov.scot/id/statistical-entity/S02>.
 ?s <http://statistics.data.gov.uk/def/statistical-geography#parentcode> ?cn.
-?s <http://statistics.data.gov.uk/def/statistical-geography#status> 'Archive'.
 ?cn rdfs:label ?Council.
 ?s rdfs:label ?IntZ.   
 ?s <http://www.w3.org/2004/02/skos/core#notation> ?code
@@ -209,7 +208,19 @@ lablsIG <- SPARQL(endpoint, queryIG)$results
 for(i in 1:nrow(lablsIG)){
   lablsIG$code[i] <- str_sub(lablsIG$code[i], start = 2, end = 10)
 }
-write.csv(lablsIG, "Q:/Shiny LA Slides/IGlabels.csv")
+write.csv(lablsIG, "C:/users/cassidy.nicholas/OneDrive - IS/Shiny LA Slides/IGlabels.csv")
 
+hincQry <- "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+SELECT ?area ?value
+WHERE {
+?s ?p <http://statistics.gov.scot/data/local-level-average-household-income-estimates-2014>.
+?s <http://purl.org/linked-data/sdmx/2009/dimension#refPeriod> <http://reference.data.gov.uk/id/year/2014>.
+?s  <http://statistics.gov.scot/def/measure-properties/median> ?value.
+?s <http://purl.org/linked-data/sdmx/2009/dimension#refArea> ?ar.
+?ar rdfs:label ?area.
+}"
+IncDta <- SPARQL(endpoint, hincQry)$result
 
+IncDta <- left_join(IncDta, lablsDZ, by = c("area" = "DataZ"))
+write_rds(IncDta, "C:/users/cassidy.nicholas/OneDrive - IS/Shiny LA Slides/IncomeData.rds")

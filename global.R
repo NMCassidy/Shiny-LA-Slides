@@ -17,11 +17,11 @@ Sys.setenv("plotly_api_key" = "xwk9zuxumf")
 HiLoTen <- function(x, number = 10){
   x <- na.omit(x)
   if(nrow(x)>= 20){
-  top_ten<-head(x, n = number)
-  bot_ten<-tail(x, n = number)
+    top_ten<-head(x, n = number)
+    bot_ten<-tail(x, n = number)
   } else{
-  top_ten<-head(x, n = (nrow(x)/2))
-  bot_ten<-tail(x, n = (nrow(x)/2))  
+    top_ten<-head(x, n = (nrow(x)/2))
+    bot_ten<-tail(x, n = (nrow(x)/2))  
   }
   top_bot_df<-rbind(top_ten, bot_ten)
   return(top_bot_df)
@@ -42,3 +42,6 @@ lablsIG <- as.data.frame(lablsIG)
 #read SIMD 16 data
 dat16 <- readRDS("SIMD16.rds")
 dat16$ReferenceArea <- as.character(dat16$ReferenceArea)
+
+#read Incomes Data
+datinc <- readRDS("C:/users/cassidy.nicholas/OneDrive - IS/Shiny LA Slides/IncomeData.rds")
