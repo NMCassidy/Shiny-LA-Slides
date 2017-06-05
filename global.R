@@ -8,7 +8,6 @@ library(plotly)
 library(stringr)
 library(RSQLite)
 library(DT)
-library(shinydashboard)
 
 Sys.setenv("plotly_username" = "NMCassidy")
 Sys.setenv("plotly_api_key" = "xwk9zuxumf")
@@ -44,4 +43,5 @@ dat16 <- readRDS("SIMD16.rds")
 dat16$ReferenceArea <- as.character(dat16$ReferenceArea)
 
 #read Incomes Data
-datinc <- readRDS("C:/users/cassidy.nicholas/OneDrive - IS/Shiny-LA-Slides/IncomeData.rds")
+datinc <- readRDS("IncomeData.rds")
+colnames(datinc)[1] <- "ReferenceArea"

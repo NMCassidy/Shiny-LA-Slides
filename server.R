@@ -43,6 +43,8 @@ shinyServer(function(input, output, session){
       }else{
         clnDta <- clnDta
       }
+    } else if(input$SIMD == "Incomes Data"){
+      clnDta <- datinc
     }
   })
   
@@ -120,7 +122,7 @@ shinyServer(function(input, output, session){
           xref = "x",
           yref = "y",
           showarrow = TRUE,
-          arrowhead = 8,
+          arrowhead = 6,
           ax = 40,
           ay = -40,
           colour = "red"
@@ -132,7 +134,7 @@ shinyServer(function(input, output, session){
           xref = "x",
           yref = "y",
           showarrow = TRUE,
-          arrowhead = 8,
+          arrowhead = 6,
           ax = 40,
           ay = -40,
           colour = "green"
@@ -181,7 +183,7 @@ shinyServer(function(input, output, session){
         xref = "x",
         yref = "y",
         showarrow = TRUE,
-        arrowhead = 8,
+        arrowhead = 6,
         ax = 40,
         ay = -40,
         colour = "red"
